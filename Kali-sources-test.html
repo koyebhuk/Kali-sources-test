@@ -1,0 +1,960 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kali源测试工具</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Roboto', sans-serif;
+        }
+        
+        :root {
+            --kali-blue: #557CF2;
+            --kali-dark: #111111;
+            --kali-light: #1A1A1A;
+            --success: #4CAF50;
+            --warning: #FFC107;
+            --danger: #F44336;
+            --info: #2196F3;
+            --text-light: #F5F5F5;
+            --text-muted: #AAAAAA;
+        }
+        
+        body {
+            background: linear-gradient(135deg, var(--kali-dark) 0%, #0a0a2a 100%);
+            color: var(--text-light);
+            min-height: 100vh;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        header {
+            text-align: center;
+            padding: 30px 0;
+            margin-bottom: 30px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        
+        .logo-icon {
+            background: var(--kali-blue);
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+        }
+        
+        h1 {
+            font-size: 2.8rem;
+            font-weight: 700;
+            background: linear-gradient(to right, var(--kali-blue), #6c8eff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            color: var(--text-muted);
+            max-width: 700px;
+            margin: 0 auto 25px;
+        }
+        
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+        
+        .btn {
+            background: linear-gradient(to right, var(--kali-blue), #6c8eff);
+            color: white;
+            border: none;
+            padding: 14px 28px;
+            font-size: 1.1rem;
+            border-radius: 50px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            box-shadow: 0 5px 15px rgba(85, 124, 242, 0.4);
+        }
+        
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(85, 124, 242, 0.6);
+        }
+        
+        .btn:active {
+            transform: translateY(1px);
+        }
+        
+        .btn-secondary {
+            background: var(--kali-light);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+        
+        .btn-secondary:hover {
+            background: #222222;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+        }
+        
+        .progress-container {
+            background: rgba(30, 30, 46, 0.8);
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+        }
+        
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+            align-items: center;
+        }
+        
+        .progress-stats {
+            display: flex;
+            gap: 20px;
+            color: var(--text-muted);
+        }
+        
+        .progress-bar-container {
+            height: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 10px;
+            position: relative;
+        }
+        
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(to right, var(--kali-blue), #6c8eff);
+            border-radius: 10px;
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+        
+        .progress-text {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            text-align: right;
+        }
+        
+        .results-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+        
+        @media (max-width: 768px) {
+            .results-container {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .source-card {
+            background: rgba(30, 30, 46, 0.8);
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+        
+        .source-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
+        }
+        
+        .card-header {
+            background: rgba(85, 124, 242, 0.2);
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .source-name {
+            font-size: 1.3rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .source-status {
+            padding: 6px 15px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+        
+        .status-pending {
+            background: rgba(255, 193, 7, 0.2);
+            color: var(--warning);
+        }
+        
+        .status-success {
+            background: rgba(76, 175, 80, 0.2);
+            color: var(--success);
+        }
+        
+        .status-fail {
+            background: rgba(244, 67, 54, 0.2);
+            color: var(--danger);
+        }
+        
+        .card-body {
+            padding: 20px;
+        }
+        
+        .source-url {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            margin-bottom: 15px;
+            word-break: break-all;
+        }
+        
+        .source-dist {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 8px 15px;
+            border-radius: 20px;
+            display: inline-block;
+            font-size: 0.85rem;
+            margin-bottom: 20px;
+        }
+        
+        .metrics {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+        
+        .metric-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 15px;
+            text-align: center;
+        }
+        
+        .metric-value {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin: 10px 0;
+        }
+        
+        .latency-value {
+            color: #6c8eff;
+        }
+        
+        .speed-value {
+            color: #4CAF50;
+        }
+        
+        .metric-label {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+        
+        .actions {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            padding: 0 20px 20px;
+        }
+        
+        .action-btn {
+            flex: 1;
+            padding: 10px;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--text-light);
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        
+        .action-btn:hover {
+            background: rgba(85, 124, 242, 0.3);
+        }
+        
+        .copy-btn {
+            background: rgba(33, 150, 243, 0.2);
+        }
+        
+        .copy-btn:hover {
+            background: rgba(33, 150, 243, 0.3);
+        }
+        
+        .summary {
+            background: rgba(30, 30, 46, 0.8);
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            margin-top: 20px;
+        }
+        
+        .summary h2 {
+            margin-bottom: 20px;
+            color: var(--kali-blue);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .recommendation {
+            background: rgba(76, 175, 80, 0.1);
+            border-left: 4px solid var(--success);
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 15px;
+        }
+        
+        .recommendation h3 {
+            color: var(--success);
+            margin-bottom: 10px;
+        }
+        
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: var(--kali-blue);
+            animation: spin 1s ease-in-out infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        footer {
+            text-align: center;
+            padding: 30px 0 20px;
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+        
+        .pulse {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--success);
+            box-shadow: 0 0 0 0 rgba(76, 175, 80, 0.7);
+            transform: scale(1);
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% {
+                transform: scale(0.95);
+                box-shadow: 0 0 0 0 rgba(76, 175, 80, 0.7);
+            }
+            
+            70% {
+                transform: scale(1);
+                box-shadow: 0 0 0 10px rgba(76, 175, 80, 0);
+            }
+            
+            100% {
+                transform: scale(0.95);
+                box-shadow: 0 0 0 0 rgba(76, 175, 80, 0);
+            }
+        }
+        
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.85);
+            color: white;
+            padding: 15px 30px;
+            border-radius: 50px;
+            font-size: 1rem;
+            z-index: 1000;
+            opacity: 0;
+            transition: opacity 0.3s, bottom 0.3s;
+            pointer-events: none;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .toast.show {
+            bottom: 40px;
+            opacity: 1;
+        }
+        
+        .config-preview {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 15px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.85rem;
+            line-height: 1.6;
+            white-space: pre-wrap;
+            overflow-x: auto;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        
+        .config-preview code {
+            color: #9cdcfe;
+        }
+        
+        .config-comment {
+            color: #6a9955;
+        }
+        
+        .config-url {
+            color: #ce9178;
+        }
+        
+        .config-branch {
+            color: #4ec9b0;
+        }
+        
+        .config-repo {
+            color: #dcdcaa;
+        }
+        
+        .config-title {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        
+        .config-title h3 {
+            color: var(--kali-blue);
+        }
+        
+        .copy-mini-btn {
+            background: rgba(33, 150, 243, 0.2);
+            color: var(--text-light);
+            border: none;
+            padding: 5px 12px;
+            border-radius: 5px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 0.85rem;
+        }
+        
+        .copy-mini-btn:hover {
+            background: rgba(33, 150, 243, 0.3);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">
+                <div class="logo-icon">
+                    <i class="fas fa-dragon"></i>
+                </div>
+            </div>
+            <h1>Kali 源测试工具</h1>
+            <p class="subtitle">测试多个Kali镜像源的状态、延迟和下载速度，一键复制配置到剪贴板</p>
+        </header>
+        
+        <div class="controls">
+            <button id="startTest" class="btn">
+                <i class="fas fa-play"></i> 开始测试所有源
+            </button>
+            <button id="sortBySpeed" class="btn btn-secondary">
+                <i class="fas fa-sort-amount-down-alt"></i> 按速度排序
+            </button>
+            <button id="sortByLatency" class="btn btn-secondary">
+                <i class="fas fa-sort-amount-down"></i> 按延迟排序
+            </button>
+        </div>
+        
+        <div class="progress-container">
+            <div class="progress-header">
+                <h2><i class="fas fa-tachometer-alt"></i> 测试进度</h2>
+                <div class="progress-stats">
+                    <span><i class="fas fa-check-circle"></i> <span id="successCount">0</span> 成功</span>
+                    <span><i class="fas fa-exclamation-triangle"></i> <span id="warningCount">0</span> 警告</span>
+                    <span><i class="fas fa-times-circle"></i> <span id="failCount">0</span> 失败</span>
+                </div>
+            </div>
+            <div class="progress-bar-container">
+                <div class="progress-bar" id="progressBar"></div>
+            </div>
+            <div class="progress-text" id="progressText">等待测试开始...</div>
+        </div>
+        
+        <div class="results-container" id="resultsContainer">
+            <!-- 结果卡片会动态生成 -->
+        </div>
+        
+        <div class="summary">
+            <h2><i class="fas fa-chart-line"></i> 测试结果摘要</h2>
+            <div id="summaryContent">
+                <p>测试尚未开始。点击"开始测试所有源"按钮以测试所有Kali镜像源。</p>
+                <p>测试过程将检查每个源的可用性、延迟和下载速度，帮助您选择最佳更新源。</p>
+            </div>
+            <div class="recommendation" id="recommendation" style="display: none;">
+                <h3><i class="fas fa-star"></i> 推荐源</h3>
+                <p>基于测试结果，我们推荐使用：<strong id="recommendedSource">阿里云</strong></p>
+                <p>该源具有最低的延迟和最高的下载速度，能够提供最佳的更新体验。</p>
+            </div>
+            
+            <div class="config-preview" id="configPreview" style="display: none;">
+                <div class="config-title">
+                    <h3><i class="fas fa-copy"></i> 配置预览</h3>
+                    <button id="copyConfigBtn" class="copy-mini-btn">
+                        <i class="fas fa-copy"></i> 复制配置
+                    </button>
+                </div>
+                <pre id="configContent"><code># 中科大: Kali滚动更新分支
+deb http://mirrors.ustc.edu.cn/kali kali-rolling main non-free contrib 
+deb-src http://mirrors.ustc.edu.cn/kali kali-rolling main non-free contrib</code></pre>
+            </div>
+        </div>
+        
+        <footer>
+            <p><span class="pulse"></span> 实时监控 | Kali源测试工具 v1.0 | 安全更新源对系统安全至关重要</p>
+            <p>提示：定期测试更新源可确保您始终使用最快的镜像，提升系统更新效率</p>
+        </footer>
+    </div>
+    
+    <div id="toast" class="toast">
+        <i class="fas fa-check-circle"></i>
+        <span>配置已复制到剪贴板！</span>
+    </div>
+
+    <script>
+        // 去重后的源列表（名称 + URL + 发行版）
+        const sources = [
+            { name: "阿里云", url: "https://mirrors.aliyun.com/kali", dist: "kali-rolling", status: "pending" },
+            { name: "中科大", url: "https://mirrors.ustc.edu.cn/kali", dist: "kali-rolling", status: "pending" },
+            { name: "清华", url: "https://mirrors.tuna.tsinghua.edu.cn/kali", dist: "kali-rolling", status: "pending" },
+            { name: "官方主源", url: "http://http.kali.org/kali", dist: "kali-rolling", status: "pending" },
+            { name: "官方安全源", url: "http://security.kali.org/kali-security", dist: "kali/updates", status: "pending" },
+            { name: "新加坡", url: "http://mirror.nus.edu.sg/kali/kali", dist: "kali", status: "pending" },
+            { name: "浙大", url: "http://mirrors.zju.edu.cn/kali", dist: "kali-rolling", status: "pending" },
+            { name: "东软大学", url: "http://mirrors.neusoft.edu.cn/kali", dist: "kali-rolling", status: "pending" }
+        ];
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const startTestBtn = document.getElementById('startTest');
+            const sortBySpeedBtn = document.getElementById('sortBySpeed');
+            const sortByLatencyBtn = document.getElementById('sortByLatency');
+            const progressBar = document.getElementById('progressBar');
+            const progressText = document.getElementById('progressText');
+            const resultsContainer = document.getElementById('resultsContainer');
+            const successCountEl = document.getElementById('successCount');
+            const warningCountEl = document.getElementById('warningCount');
+            const failCountEl = document.getElementById('failCount');
+            const summaryContent = document.getElementById('summaryContent');
+            const recommendation = document.getElementById('recommendation');
+            const recommendedSource = document.getElementById('recommendedSource');
+            const toast = document.getElementById('toast');
+            const configPreview = document.getElementById('configPreview');
+            const configContent = document.getElementById('configContent');
+            const copyConfigBtn = document.getElementById('copyConfigBtn');
+            
+            let testInProgress = false;
+            let testResults = [];
+            let currentConfig = "";
+            
+            // 初始化显示
+            renderSourceCards();
+            
+            // 开始测试
+            startTestBtn.addEventListener('click', startTest);
+            sortBySpeedBtn.addEventListener('click', () => sortResults('speed'));
+            sortByLatencyBtn.addEventListener('click', () => sortResults('latency'));
+            copyConfigBtn.addEventListener('click', copyConfig);
+            
+            // 开始测试函数
+            function startTest() {
+                if (testInProgress) return;
+                
+                testInProgress = true;
+                startTestBtn.innerHTML = '<div class="loading"></div> 测试中...';
+                startTestBtn.disabled = true;
+                
+                // 重置状态
+                sources.forEach(source => {
+                    source.status = "pending";
+                    source.latency = 0;
+                    source.speed = 0;
+                    source.error = "";
+                });
+                
+                testResults = [];
+                successCountEl.textContent = "0";
+                warningCountEl.textContent = "0";
+                failCountEl.textContent = "0";
+                progressBar.style.width = "0%";
+                progressText.textContent = "测试初始化...";
+                summaryContent.innerHTML = "<p>测试正在进行中，请稍候...</p>";
+                recommendation.style.display = "none";
+                configPreview.style.display = "none";
+                
+                renderSourceCards();
+                
+                // 模拟测试过程
+                let completed = 0;
+                const total = sources.length;
+                
+                sources.forEach((source, index) => {
+                    // 模拟延迟
+                    setTimeout(() => {
+                        testSource(source).then(result => {
+                            testResults.push(result);
+                            completed++;
+                            
+                            // 更新进度
+                            const progress = Math.round((completed / total) * 100);
+                            progressBar.style.width = `${progress}%`;
+                            progressText.textContent = `已完成 ${completed}/${total} (${progress}%)`;
+                            
+                            // 更新状态计数
+                            const successCount = testResults.filter(r => r.status === "success").length;
+                            const warningCount = testResults.filter(r => r.status === "warning").length;
+                            const failCount = testResults.filter(r => r.status === "fail").length;
+                            
+                            successCountEl.textContent = successCount;
+                            warningCountEl.textContent = warningCount;
+                            failCountEl.textContent = failCount;
+                            
+                            // 重新渲染卡片
+                            renderSourceCards();
+                            
+                            // 测试完成
+                            if (completed === total) {
+                                finishTest();
+                            }
+                        });
+                    }, index * 800);
+                });
+            }
+            
+            // 测试单个源
+            function testSource(source) {
+                return new Promise((resolve) => {
+                    // 模拟测试过程
+                    source.status = "testing";
+                    renderSourceCards();
+                    
+                    // 模拟延迟（真实应用中这里会是实际的HTTP请求）
+                    const latency = Math.random() * 300 + 50;
+                    const speed = Math.random() * 8000 + 2000;
+                    
+                    setTimeout(() => {
+                        // 模拟成功/失败
+                        const successRate = 0.8; // 80%成功率
+                        const isSuccess = Math.random() < successRate;
+                        const hasWarning = Math.random() < 0.2;
+                        
+                        if (isSuccess) {
+                            source.status = hasWarning ? "warning" : "success";
+                            source.latency = Math.round(latency);
+                            source.speed = Math.round(speed);
+                            source.error = hasWarning ? "使用了备用路径" : "";
+                        } else {
+                            source.status = "fail";
+                            source.latency = 0;
+                            source.speed = 0;
+                            source.error = "连接超时或文件不存在";
+                        }
+                        
+                        resolve({...source});
+                    }, 1500);
+                });
+            }
+            
+            // 渲染源卡片
+            function renderSourceCards() {
+                resultsContainer.innerHTML = "";
+                
+                sources.forEach(source => {
+                    const card = document.createElement('div');
+                    card.className = "source-card";
+                    
+                    let statusClass, statusText, statusIcon;
+                    switch (source.status) {
+                        case "success":
+                            statusClass = "status-success";
+                            statusText = "成功";
+                            statusIcon = "fa-check-circle";
+                            break;
+                        case "warning":
+                            statusClass = "status-warning";
+                            statusText = "警告";
+                            statusIcon = "fa-exclamation-triangle";
+                            break;
+                        case "fail":
+                            statusClass = "status-fail";
+                            statusText = "失败";
+                            statusIcon = "fa-times-circle";
+                            break;
+                        case "testing":
+                            statusClass = "status-pending";
+                            statusText = "测试中";
+                            statusIcon = "fa-sync fa-spin";
+                            break;
+                        default:
+                            statusClass = "status-pending";
+                            statusText = "等待测试";
+                            statusIcon = "fa-clock";
+                    }
+                    
+                    card.innerHTML = `
+                        <div class="card-header">
+                            <div class="source-name">
+                                <i class="fas fa-server"></i> ${source.name}
+                            </div>
+                            <div class="source-status ${statusClass}">
+                                <i class="fas ${statusIcon}"></i> ${statusText}
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="source-url">
+                                <i class="fas fa-link"></i> ${source.url}
+                            </div>
+                            <div class="source-dist">
+                                <i class="fas fa-code-branch"></i> ${source.dist}
+                            </div>
+                            <div class="metrics">
+                                <div class="metric-card">
+                                    <div class="metric-label"><i class="fas fa-clock"></i> 延迟</div>
+                                    <div class="metric-value latency-value">
+                                        ${source.latency > 0 ? source.latency + " ms" : "N/A"}
+                                    </div>
+                                </div>
+                                <div class="metric-card">
+                                    <div class="metric-label"><i class="fas fa-bolt"></i> 下载速度</div>
+                                    <div class="metric-value speed-value">
+                                        ${source.speed > 0 ? (source.speed / 1024).toFixed(2) + " MB/s" : "N/A"}
+                                    </div>
+                                </div>
+                            </div>
+                            ${source.error ? `<div class="source-error" style="margin-top:15px;color:#FFC107;font-size:0.9rem;">
+                                <i class="fas fa-exclamation-circle"></i> ${source.error}
+                            </div>` : ''}
+                        </div>
+                        <div class="actions">
+                            <button class="action-btn test-single-btn" data-source="${source.name}">
+                                <i class="fas fa-sync"></i> 重新测试
+                            </button>
+                            <button class="action-btn copy-btn" data-source="${source.name}">
+                                <i class="fas fa-copy"></i> 复制配置
+                            </button>
+                        </div>
+                    `;
+                    
+                    resultsContainer.appendChild(card);
+                });
+                
+                // 添加单个测试事件
+                document.querySelectorAll('.test-single-btn').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const sourceName = this.getAttribute('data-source');
+                        const source = sources.find(s => s.name === sourceName);
+                        testSource(source).then(() => {
+                            renderSourceCards();
+                        });
+                    });
+                });
+                
+                // 添加复制配置事件
+                document.querySelectorAll('.copy-btn').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const sourceName = this.getAttribute('data-source');
+                        const source = sources.find(s => s.name === sourceName);
+                        const config = generateSourceConfig(source);
+                        
+                        // 显示配置预览
+                        currentConfig = config;
+                        configContent.innerHTML = highlightConfig(config);
+                        configPreview.style.display = "block";
+                        
+                        // 滚动到预览区域
+                        configPreview.scrollIntoView({ behavior: 'smooth' });
+                    });
+                });
+            }
+            
+            // 生成源配置
+            function generateSourceConfig(source) {
+                const isSecurity = source.dist.includes('updates');
+                const branchType = isSecurity ? "安全更新" : "滚动更新分支";
+                
+                let config = `# ${source.name}: ${branchType}\n`;
+                config += `deb ${source.url} ${source.dist} main non-free contrib\n`;
+                config += `deb-src ${source.url} ${source.dist} main non-free contrib`;
+                
+                return config;
+            }
+            
+            // 高亮配置语法
+            function highlightConfig(config) {
+                // 使用正则表达式匹配不同部分
+                const lines = config.split('\n');
+                let highlighted = "";
+                
+                for (const line of lines) {
+                    if (line.startsWith('#')) {
+                        highlighted += `<span class="config-comment">${line}</span>\n`;
+                    } else if (line.startsWith('deb') || line.startsWith('deb-src')) {
+                        const parts = line.split(' ');
+                        let highlightedLine = "";
+                        
+                        for (let i = 0; i < parts.length; i++) {
+                            if (i === 0) {
+                                highlightedLine += `<span class="config-repo">${parts[i]}</span> `;
+                            } else if (i === 1) {
+                                highlightedLine += `<span class="config-url">${parts[i]}</span> `;
+                            } else if (i === 2) {
+                                highlightedLine += `<span class="config-branch">${parts[i]}</span> `;
+                            } else {
+                                highlightedLine += `${parts[i]} `;
+                            }
+                        }
+                        
+                        highlighted += highlightedLine + '\n';
+                    } else {
+                        highlighted += line + '\n';
+                    }
+                }
+                
+                return highlighted;
+            }
+            
+            // 复制配置到剪贴板
+            function copyConfig() {
+                navigator.clipboard.writeText(currentConfig).then(() => {
+                    showToast('配置已复制到剪贴板！');
+                }).catch(err => {
+                    showToast('复制失败: ' + err);
+                });
+            }
+            
+            // 显示Toast提示
+            function showToast(message) {
+                toast.querySelector('span').textContent = message;
+                toast.classList.add('show');
+                
+                setTimeout(() => {
+                    toast.classList.remove('show');
+                }, 3000);
+            }
+            
+            // 完成测试
+            function finishTest() {
+                testInProgress = false;
+                startTestBtn.innerHTML = '<i class="fas fa-play"></i> 开始测试所有源';
+                startTestBtn.disabled = false;
+                progressText.textContent = "测试完成！";
+                
+                // 生成摘要
+                const successSources = sources.filter(s => s.status === "success");
+                const warningSources = sources.filter(s => s.status === "warning");
+                const failSources = sources.filter(s => s.status === "fail");
+                
+                let summaryHTML = `
+                    <p>测试完成！共测试了 ${sources.length} 个源：</p>
+                    <ul style="margin-top:15px;margin-left:20px;">
+                        <li><span style="color:${successSources.length ? '#4CAF50' : '#AAAAAA'}">✓</span> ${successSources.length} 个源测试成功</li>
+                        <li><span style="color:${warningSources.length ? '#FFC107' : '#AAAAAA'}">⚠️</span> ${warningSources.length} 个源测试有警告</li>
+                        <li><span style="color:${failSources.length ? '#F44336' : '#AAAAAA'}">✗</span> ${failSources.length} 个源测试失败</li>
+                    </ul>
+                `;
+                
+                if (successSources.length > 0) {
+                    // 找到最佳源（最低延迟）
+                    const bestSource = [...successSources].sort((a, b) => a.latency - b.latency)[0];
+                    
+                    summaryHTML += `<p style="margin-top:15px;">延迟最低的源：<strong>${bestSource.name}</strong> (${bestSource.latency}ms)</p>`;
+                    
+                    // 显示推荐
+                    recommendation.style.display = "block";
+                    recommendedSource.textContent = bestSource.name;
+                    
+                    // 显示最佳源的配置
+                    const config = generateSourceConfig(bestSource);
+                    currentConfig = config;
+                    configContent.innerHTML = highlightConfig(config);
+                    configPreview.style.display = "block";
+                }
+                
+                summaryContent.innerHTML = summaryHTML;
+                
+                // 默认按延迟排序
+                sortResults('latency');
+            }
+            
+            // 排序结果
+            function sortResults(criteria) {
+                if (criteria === 'latency') {
+                    sources.sort((a, b) => {
+                        // 将未测试或失败的源排在最后
+                        if (a.latency === 0 && b.latency === 0) return 0;
+                        if (a.latency === 0) return 1;
+                        if (b.latency === 0) return -1;
+                        return a.latency - b.latency;
+                    });
+                } else if (criteria === 'speed') {
+                    sources.sort((a, b) => {
+                        if (a.speed === 0 && b.speed === 0) return 0;
+                        if (a.speed === 0) return 1;
+                        if (b.speed === 0) return -1;
+                        return b.speed - a.speed;
+                    });
+                }
+                
+                renderSourceCards();
+            }
+        });
+    </script>
+</body>
+</html>

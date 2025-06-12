@@ -13,10 +13,11 @@
 
 ## 使用方法
 
-1. 打开 [Kali-sources-test.html ]()文件（**可直接用浏览器打开，无需服务器环境**）。
+1. 下载 [Kali-sources-test.html ](https://kali-sources-test.pages.dev/)文件**可直接用浏览器打开，无需服务器环境**。
 2. 点击“开始测试所有源”按钮，等待测试完成。
 3. 可根据需要点击“按速度排序”或“按延迟排序”按钮。
 4. 推荐源和最佳配置会在测试完成后自动显示，也可在每个源卡片点击“复制配置”按钮获取对应配置。
+5. 当”源址仓库”不测试直接“复制配置”按钮获取对应配置。
 
 ## 复制配置功能
 
@@ -50,7 +51,7 @@ deb-src http://mirrors.ustc.edu.cn/kali kali-rolling main non-free contrib
 
 ## 截图
 
-[界面截图]()
+[没截图直接点看效果](https://kali-sources-test.pages.dev/)
 
 ## 免责声明
 

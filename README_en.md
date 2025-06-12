@@ -13,10 +13,11 @@ This project is a web tool for testing the status, latency, and download speed o
 
 ## How to use
 
-1. Open the [[Kali-sources-test.html]] file (**can be opened directly with a browser, no server environment required**).
+1. Download the [Kali-sources-test.html](https://kali-sources-test.pages.dev/) file directly with your browser, no server environment is required.
 2. Click the "Start Test All Sources" button and wait for the test to complete.
 3. You can click the "Sort by Speed" or "Sort by Delay" button as needed.
 4. The recommended source and optimal configuration will be automatically displayed after the test is completed, and you can also click the "Copy Configuration" button in each source card to get the corresponding configuration.
+5. When the "source repository" does not test, directly use the "Copy Configuration" button to obtain the corresponding configuration.
 
 ## Replication configuration function
 
@@ -50,7 +51,7 @@ The above dependencies are automatically loaded through the CDN and do not need 
 
 ## Screenshots
 
-! [Screenshot] ()
+[Preview not shown. Click to view the effect.](https://kali-sources-test.pages.dev/)
 
 ## Disclaimer
 
