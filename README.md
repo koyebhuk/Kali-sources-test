@@ -13,7 +13,7 @@
 
 ## 使用方法
 
-1. 下载 [Kali-sources-test.html ](https://kali-sources-test.pages.dev/)文件**可直接用浏览器打开，无需服务器环境**。
+1. 下载 [Kali-sources-test.html ](https://kali-sources-test.pages.dev/Kali-sources-test)文件**可直接用浏览器打开，无需服务器环境**。
 - <font color=orange>部署 Cloudflare 重定向以实现在线预览。</font>
 2. 点击“开始测试所有源”按钮，等待测试完成。
 3. 可根据需要点击“按速度排序”或“按延迟排序”按钮。
@@ -48,11 +48,11 @@ deb-src http://mirrors.ustc.edu.cn/kali kali-rolling main non-free contrib
 
 ## 文件说明
 
-- [`Kali-sources-test.html`]()：主页面及全部功能实现
+- [`Kali-sources-test.html`](https://kali-sources-test.pages.dev/Kali-sources-test)：主页面及全部功能实现
 
 ## 截图
 
-[点击实时预览效果。](https://kali-sources-test.pages.dev/)
+[点击实时预览效果。](https://kali-sources-test.pages.dev/Kali-sources-test)
 
 ## 免责声明
 
